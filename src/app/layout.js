@@ -1,16 +1,35 @@
 import localFont from "next/font/local";
 import "./globals.css";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+const vazir = localFont({
+  src: [{
+    path: "./fonts/Vazir.woff2",
+    weight: "400",
+    style: "normal"
+  },
+  {
+    path: "./fonts/Vazir-Bold.woff2",
+    weight: "800",
+    style: "bold"
+  },
+  {
+    path: "./fonts/Vazir-Light.woff2",
+    weight: "300",
+    style: "light"
+  },
+  {
+    path: "./fonts/Vazir-Medium.woff2",
+    weight: "500",
+    style: "medium"
+  },
+  {
+    path: "./fonts/Vazir-Thin.woff2",
+    weight: "200",
+    style: "thin"
+  },
+  ],
+  variable: "--font-vazir",
+})
 
 export const metadata = {
   title: "Create Next App",
@@ -19,9 +38,9 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" dir="rtl">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${vazir.variable} antialiased`}
       >
         {children}
       </body>
