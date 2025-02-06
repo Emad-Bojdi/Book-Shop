@@ -9,26 +9,27 @@ const vazir = localFont({
   },
   {
     path: "./fonts/Vazir-Bold.woff2",
-    weight: "800",
-    style: "bold"
+    weight: "700",
+    style: "normal"
   },
   {
     path: "./fonts/Vazir-Light.woff2",
     weight: "300",
-    style: "light"
+    style: "normal"
   },
   {
     path: "./fonts/Vazir-Medium.woff2",
     weight: "500",
-    style: "medium"
+    style: "normal"
   },
   {
     path: "./fonts/Vazir-Thin.woff2",
-    weight: "200",
-    style: "thin"
+    weight: "100",
+    style: "normal"
   },
   ],
   variable: "--font-vazir",
+  display: "swap"
 })
 
 export const metadata = {

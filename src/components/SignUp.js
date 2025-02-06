@@ -1,11 +1,13 @@
+import Form from "@/modules/Form"
 
 
 const SignUp = () => {
   return (
-    <div className="bg-[#F7F8F8]">
-      
+    <div className="w-full bg-[ground]">
+      <Form/>
     </div>
   )
 }
 
 export default SignUp
+

@@ -1,13 +1,48 @@
+@import "tailwindcss"
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-    :root {
-      --font-vazir: '';
-    }
+  :root {
+    --font-vazir: '';
   }
-  
-  .font-vazir {
+}
+
+@layer components {
+  .font-vazir-thin {
     font-family: var(--font-vazir);
+    font-weight: 100;
   }
+
+  .font-vazir-light {
+    font-family: var(--font-vazir);
+    font-weight: 300;
+  }
+
+  .font-vazir-normal {
+    font-family: var(--font-vazir);
+    font-weight: 400;
+  }
+
+  .font-vazir-medium {
+    font-family: var(--font-vazir);
+    font-weight: 500;
+  }
+
+  .font-vazir-semi-bold {
+    font-family: var(--font-vazir);
+    font-weight: 600;
+  }
+
+  .font-vazir-bold {
+    font-family: var(--font-vazir);
+    font-weight: 700;
+  }
+
+  .font-vazir-black {
+    font-family: var(--font-vazir);
+    font-weight: 900;
+  }
+}
