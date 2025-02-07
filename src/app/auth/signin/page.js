@@ -1,9 +1,10 @@
+import Signin from "@/components/template/Signin"
 
 
 const page = () => {
   return (
     <div>
-      sgh
+      <Signin/>
     </div>
   )
 }

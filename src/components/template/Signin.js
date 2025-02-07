@@ -1,11 +1,12 @@
+import LoginForm from "../modules/LoginForm";
 
 
 const Signin = () => {
   return (
-    <div>
-      
+    <div className="w-full">
+      <LoginForm/>
     </div>
   )
 }
 
-export default Signin
+export default Signin;

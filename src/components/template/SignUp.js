@@ -3,7 +3,7 @@ import Form from "@/components/modules/Form"
 
 const SignUp = () => {
   return (
-    <div className="w-full bg-[ground]">
+    <div className="w-full">
       <Form/>
     </div>
   )
