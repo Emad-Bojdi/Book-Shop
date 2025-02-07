@@ -54,8 +54,12 @@ const Form = () => {
             const data = await response.json();
 
             console.log(data);
-            if (data.status === 201) {
+            if (response.status === 201) {
                 toast.success("ارسال با موفقیت انجام شد.")
+                setFormData()
+            }
+            else if (response.status === 400) {
+                toast.error("اطلاعات این کاربر وجود دارد!")
             }
         } catch (err) {
             console.log(err)
@@ -73,14 +77,14 @@ const Form = () => {
                         <p className="font-vazir-medium text-[24px] leading-[37.5px] text-[#282828] "> فرم ثبت نام </p>
                         <div className="flex flex-col gap-y-[15px]  items-center w-full justify-between">
                             <input type="text" name="userName" value={formData.userName} onChange={handleChange} placeholder="نام کاربری" className=" font-vazir-medium pr-[15px] w-9/10 h-[53px] rounded-[15px] bg-[#F2F2F2] border-none text-[#282828] text-[16px]" />
-                            <input type="text" name="password" value={formData.password} onChange={handleChange} placeholder="رمز عبور" className="font-vazir-medium pr-[15px] w-9/10 h-[53px] rounded-[15px] bg-[#F2F2F2] border-none text-[#282828] text-[16px]" />
-                            <input type="text" name="rePassword" value={formData.rePassword} onChange={handleChange} placeholder="تکرار رمز عبور" className="font-vazir-medium pr-[15px] w-9/10 h-[53px] rounded-[15px] bg-[#F2F2F2] border-none text-[#282828] text-[16px] " />
+                            <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="رمز عبور" className="font-vazir-medium pr-[15px] w-9/10 h-[53px] rounded-[15px] bg-[#F2F2F2] border-nopassword-[#282828] text-[16px]" />
+                            <input type="password" name="rePassword" value={formData.rePassword} onChange={handleChange} placeholder="تکرار رمز عبور" className="font-vazir-medium pr-[15px] w-9/10 h-[53px] rounded-[15px] bg-[#F2F2F2] border-none text-[#282828] text-[16px] " />
                         </div>
                         <button className="font-vazir-medium  w-9/10 h-[53px] rounded-[15px] bg-[#F21055] text-[#FFFFFF] border-none text-[16px]" type="submit" disabled={isSubmitting} >
                             {isSubmitting ? "در حال ارسال..." : " ثبت نام "}
                         </button>
                         <div className="w-full">
-                            <Link href="/signin" className="text-right no-underline font-vazir-normal text-[16px] text-[#F21055] pr-[15px]">
+                            <Link href="/auth/signin" className="text-right no-underline font-vazir-normal text-[16px] text-[#F21055] pr-[15px]">
                                 حساب کاربری دارید؟
                             </Link>
                         </div>
@@ -88,7 +92,7 @@ const Form = () => {
                 </div>
 
             </div>
-            <Toaster />
+            <Toaster toastOptions={{className: "font-vazir-medium"}}/>
         </>
     )
 }

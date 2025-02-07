@@ -1,9 +1,10 @@
+import SignUp from '@/components/template/SignUp'
 
 
 const page = () => {
   return (
     <div>
-      sgh
+      <SignUp/>
     </div>
   )
 }
