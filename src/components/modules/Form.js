@@ -83,7 +83,7 @@ const Form = () => {
 
     return (
         <>
-            <div className="flex flex-col w-full h-screen bg-white items-center justify-center">
+            <div className="flex flex-col w-full h-screen bg-white items-center justify-center bg-[#FFFFFF]">
                 <div className=" flex items-center justify-center">
                     <form onSubmit={handleSubmit} className="w-[460px] h-[596px] border border-[#E4E4E4] rounded-[40px]  flex flex-col  items-center justify-around">
                         <p className="font-vazir-medium text-[24px] leading-[37.5px] text-[#282828] "> فرم ثبت نام </p>
