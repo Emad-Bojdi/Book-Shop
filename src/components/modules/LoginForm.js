@@ -15,9 +15,7 @@ const LoginForm = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const input = useRef(null);
 
-    useEffect(() => {
-        input.current?.focus()
-    })
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -61,12 +59,12 @@ const LoginForm = () => {
             console.log(data.token)
             if(response.ok === true){
                 toast.success("وارد شدید!");
-                setCookie(data.token);
+                setCookie({accessToken: data.token});
             }
             else if(response.ok === false){
                 toast.error("ابتدا حساب کاربری ایجاد کنید!");
             }
-        } catch (error) {
+        } catch (err) {
             console.log(err);
             toast.error("ارسال اطلاعات با خطا مواجه شد. لطفا دوباره تلاش کنید")
         } finally{
