@@ -20,8 +20,6 @@ const HomePage = () => {
       });
       console.log(res)
       if (!res.ok) {
-        // If the response status code is not in the 200-299 range,
-        // it indicates an error.
         throw new Error(`HTTP error! Status: ${res.status}`);
       }
       const data = await res.json();
@@ -29,9 +27,9 @@ const HomePage = () => {
       setBooks(data.data); // Assuming you want to store the fetched books in the state
     } catch (error) {
       console.error("Failed to fetch books:", error);
-      // setIsLoading(false);
+      setIsLoading(false);
     } finally {
-      // setIsLoading(false);
+      setIsLoading(false);
     }
   }
   useEffect(() => {
@@ -56,7 +54,7 @@ const HomePage = () => {
         </div>
         {isLoading ? (<div className=" flex justify-center">
           <span class="loader"></span>
-        </div>) : (<div>
+        </div>) : (<div className="flex flex-row mt-[10px]">
           {
             books.map((book, index) => (
               <BookCard key={index} book={book} />
