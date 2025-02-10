@@ -13,11 +13,7 @@ const Form = () => {
         rePassword: ""
     });
     const router = useRouter();
-    const input = useRef(null);
 
-    useEffect(() => {
-        input.current?.focus()
-      })
     const [isSubmitting, setIsSubmitting] = useState(false);
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -68,7 +64,7 @@ const Form = () => {
                     password: "",
                     rePassword: "",
                 })
-                router.push("/signin");
+                router.push("/auth/signin");
             }
             else if (response.status === 400) {
                 toast.error("اطلاعات این کاربر وجود دارد!")
@@ -88,7 +84,7 @@ const Form = () => {
                     <form onSubmit={handleSubmit} className="w-[460px] h-[596px] border border-[#E4E4E4] rounded-[40px]  flex flex-col  items-center justify-around">
                         <p className="font-vazir-medium text-[24px] leading-[37.5px] text-[#282828] "> فرم ثبت نام </p>
                         <div className="flex flex-col gap-y-[15px]  items-center w-full justify-between">
-                            <input type="text" id="input" name="userName" value={formData?.userName} onChange={handleChange} placeholder="نام کاربری" className=" font-vazir-medium pr-[15px] w-9/10 h-[53px] rounded-[15px] bg-[#F2F2F2] border-none text-[#282828] text-[16px] outline-none" ref={input} />
+                            <input type="text"  name="userName" value={formData?.userName} onChange={handleChange} placeholder="نام کاربری" className=" font-vazir-medium pr-[15px] w-9/10 h-[53px] rounded-[15px] bg-[#F2F2F2] border-none text-[#282828] text-[16px] outline-none" />
                             <input type="password" name="password" value={formData?.password} onChange={handleChange} placeholder="رمز عبور" className="font-vazir-medium pr-[15px] w-9/10 h-[53px] rounded-[15px] bg-[#F2F2F2] border-none text-[#282828] text-[16px] outline-none" />
                             <input type="password" name="rePassword" value={formData?.rePassword} onChange={handleChange} placeholder="تکرار رمز عبور" className="font-vazir-medium pr-[15px] w-9/10 h-[53px] rounded-[15px] bg-[#F2F2F2] border-none text-[#282828] text-[16px] outline-none" />
                         </div>

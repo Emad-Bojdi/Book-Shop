@@ -4,10 +4,11 @@ import Image from "next/image"
 import BookCard from "../modules/BookCard"
 import { useState, useEffect } from "react";
 import "./Loader.css"
+import Modal from "../modules/Modal";
 const HomePage = () => {
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [modal, setModal] = useState(false);
 
   const getBooks = async () => {
     setIsLoading(true);
@@ -37,24 +38,30 @@ const HomePage = () => {
   }, []);
 
   const handleSort = () => {
-    console.log("clicked")
+    console.log("clicked");
+    setModal(!modal)
   }
 
   return (
     <div className="w-full bg-[#FCFCFC]">
       <div className=" flex flex-col p-[15px]">
-        <div className="flex flex-row justify-between ">
+        <div className="flex flex-row justify-between mx-[15px]-">
           <div className="flex flex-row justify-baseline items-center gap-x-[5px]">
             <Image src="/icons/book.svg" alt="book" width={28} height={28} />
             <span className=" font-vazir-normal text-[28px] leading-[50px] text-[#000000] "> همه کتاب ها </span>
           </div>
-          <button className="bg-[#F21055] w-[154px] h-[62px] rounded-[10px] border-none font-vazir-bold text-[20px] leading-[37.5px] text-[#FFFFFF] " onClick={handleSort}>
+          <button className="bg-[#F21055] w-[154px] h-[62px] rounded-[10px] border-none outline-none cursor-pointer font-vazir-bold text-[20px] leading-[37.5px] text-[#FFFFFF] hover:bg-[#ec849c]" onClick={handleSort}>
             مرتب سازی
           </button>
+          {
+            modal && (<Modal setModal={setModal}>
+              
+            </Modal>)
+          }
         </div>
         {isLoading ? (<div className=" flex justify-center">
           <span class="loader"></span>
-        </div>) : (<div className="flex flex-row mt-[10px]">
+        </div>) : (<div className="flex flex-wrap flex-row justify-center mt-[15px] gap-x-[50px] gap-y-[50px]">
           {
             books.map((book, index) => (
               <BookCard key={index} book={book} />

@@ -4,7 +4,7 @@ import Link from "next/link";
 const BookCard = ({book}) => {
   const {title, author, price} = book;
   return (
-    <div className="bg-[#FFFFFF] w-[231px] h-[200px] rounded-[12px] shadow-[0_0_1px_1px_rgba(0,0,0,0.1)] ml-[10px]">
+    <div className="bg-[#FFFFFF] w-[231px] h-[240px] rounded-[12px] shadow-[0_0_1px_1px_rgba(0,0,0,0.1)] ml-[10px]">
       <div className="flex flex-col justify-center p-[8px]">
       <Link  className="font-vazir-normal text-[25px] leading-[31.25px] text-[#282828] no-underline" href={"/"}>
         {title}
