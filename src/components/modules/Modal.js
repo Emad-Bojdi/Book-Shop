@@ -76,7 +76,7 @@ const Modal = ({ onSort, setModal }) => {
                     <button className='w-[185px] h-[42px] bg-[#F21055] rounded-[10px] outline-none border-none font-vazir-medium text-[#fff] text-[14px] leading-[21.88px] ' onClick={handleSort}>
                         جست و جو
                     </button>
-                    <button  className='w-[185px] h-[42px] bg-[#DFDFDF] rounded-[10px] outline-none border-none font-vazir-medium text-[#282828] text-[14px] leading-[21.88px] '  onClick={() => setModal(false)}>
+                    <button  className='w-[185px] h-[42px] bg-[#DFDFDF] rounded-[10px] outline-none border-none font-vazir-medium text-[#282828] text-[14px] leading-[21.88px] cursor-pointer'  onClick={() => setModal(false)}>
                         انصراف
                     </button>
                 </div>

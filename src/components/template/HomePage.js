@@ -5,6 +5,7 @@ import BookCard from "../modules/BookCard"
 import { useState, useEffect } from "react";
 import "./Loader.css"
 import Modal from "../modules/Modal";
+import Link from "next/link";
 
 const HomePage = () => {
   const [books, setBooks] = useState([]);
@@ -16,7 +17,7 @@ const HomePage = () => {
     setIsLoading(true);
     try {
       const queryString = new URLSearchParams(queryParams).toString();
-      
+
       // Update the URL with query parameters without page reload
       const newUrl = `${window.location.pathname}${queryString ? `?${queryString}` : ''}`;
       window.history.pushState({ path: newUrl }, '', newUrl);
@@ -74,13 +75,18 @@ const HomePage = () => {
     <div className="w-full bg-[#FCFCFC]">
       <div className=" flex flex-col p-[15px]">
         <div className="flex flex-row justify-between mx-[15px]-">
-          <div className="flex flex-row justify-baseline items-center gap-x-[5px]">
+          <div className="flex flex-row justify-baseline items-center gap-x-[10px]">
             <Image src="/icons/book.svg" alt="book" width={28} height={28} />
             <span className=" font-vazir-normal text-[28px] leading-[50px] text-[#000000] "> همه کتاب ها </span>
           </div>
-          <button className="bg-[#F21055] w-[154px] h-[62px] rounded-[10px] border-none outline-none cursor-pointer font-vazir-bold text-[20px] leading-[37.5px] text-[#FFFFFF] hover:bg-[#ec849c]" onClick={() => setModal(true)}>
-            مرتب سازی
-          </button>
+          <div className="flex flex-row justify-between gap-x-[10px] ml-[30px]">
+            <Link href={"/dashboard"} className="bg-[#F21055] flex items-center justify-center w-[154px] h-[62px] rounded-[10px] no-underline text-center  cursor-pointer font-vazir-bold text-[20px] leading-[37.5px] text-[#FFFFFF] hover:bg-[#ec849c]" >
+              داشبورد
+            </Link>
+            <button className="bg-[#F21055] w-[154px] h-[62px] rounded-[10px] border-none outline-none cursor-pointer font-vazir-bold text-[20px] leading-[37.5px] text-[#FFFFFF] hover:bg-[#ec849c]" onClick={() => setModal(true)}>
+              مرتب سازی
+            </button>
+          </div>
           {
             modal && (<Modal setModal={setModal} onSort={handleSort} />)
           }
