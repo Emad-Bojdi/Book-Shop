@@ -5,9 +5,11 @@ import Link from 'next/link'
 import toast, {Toaster} from 'react-hot-toast';
 import { setCookie } from '@/utils/cookie';
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 
 
 const LoginForm = () => {
+    const router = useRouter();
     const [formData, setFormData] = useState({
         userName: "",
         password: "",
@@ -60,6 +62,8 @@ const LoginForm = () => {
             if(response.ok === true){
                 toast.success("وارد شدید!");
                 setCookie({accessToken: data.token});
+                console.log(data.token)
+                router.push("/")
             }
             else if(response.ok === false){
                 toast.error("ابتدا حساب کاربری ایجاد کنید!");

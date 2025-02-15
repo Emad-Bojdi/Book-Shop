@@ -5,9 +5,9 @@ import TableList from './TableList'
 
 const DashboardPage = () => {
   return (
-    <div className='bg-[#F7F8F8] w-full h-screen '>
+    <div className='bg-[#F7F8F8] w-full h-screen'>
       <SearchBar />
-      <div className='flex justify-center  mt-[30px]'>
+      <div className='flex justify-center pt-[30px]'>
         <div className='w-4/5 flex justify-between items-center'>
           <div className='flex items-center flex-row space-x-[5px]'>
             <Image src={"icons/setting-3.svg"} alt='manage' width={30} height={30} />

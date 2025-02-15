@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const TableList = () => {
     return (
-        <div className="w-full flex justify-center mt-[25px]">
+        <div className="w-full flex justify-center pt-[25px]">
             <table className="w-4/5 ">
                 <thead className="flex h-[60px] w-full bg-[#E4E4E4] rounded-t-[20px]">
                     <tr className="w-9/10 h-full flex flex-row items-center  ">

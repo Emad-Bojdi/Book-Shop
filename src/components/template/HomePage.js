@@ -6,12 +6,28 @@ import { useState, useEffect } from "react";
 import "./Loader.css"
 import Modal from "../modules/Modal";
 import Link from "next/link";
+import { getCookie } from "@/utils/cookie";
 
 const HomePage = () => {
+  const accessToken = getCookie("accessToken")
+
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [modal, setModal] = useState(false);
   const [queryParams, setQueryParams] = useState({});
+
+
+  
+  const getProfile = async () => {
+    const res = await fetch("http://localhost:3001/auth/check-login", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `bearer ${accessToken}`
+      },
+    });
+    console.log(res)
+  }
 
   const getBooks = async () => {
     setIsLoading(true);
@@ -68,8 +84,10 @@ const HomePage = () => {
   }
 
   useEffect(() => {
+    getProfile();
     getBooks(); // Fetch books whenever queryParams change
   }, [queryParams]);
+
 
   return (
     <div className="w-full bg-[#FCFCFC]">
