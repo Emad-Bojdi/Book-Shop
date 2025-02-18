@@ -1,7 +1,7 @@
 import Image from "next/image"
 
 
-const SearchBar = () => {
+const SearchBar = ({username}) => {
     return (
         <div className="flex flex-row justify-center">
             <div className="w-4/5 border border-[#E4E4E4] rounded-[16px] h-[60px] bg-[#FFFFFF] flex items-center ">
@@ -17,7 +17,7 @@ const SearchBar = () => {
                             </div>
                         </div>
                         <div className="h-[22px] flex flex-col  ">
-                            <span className="h-[10px] text-[16px] font-vazir-normal text-[#282828] ">عماد بجدی</span>
+                            <span className="h-[10px] text-[16px] font-vazir-normal text-[#282828] "> {username} </span>
                             <p className="h-auto text-[14px] font-vazir-thin text-[#282828] ">کاربر</p>
                         </div>
                     </div>

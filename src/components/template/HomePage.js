@@ -11,23 +11,52 @@ import { getCookie } from "@/utils/cookie";
 const HomePage = () => {
   const accessToken = getCookie("accessToken")
 
+  const [buttonText, setButtonText] = useState("داشبورد");
+  const [href, setHref] = useState("/dashboard");
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [modal, setModal] = useState(false);
   const [queryParams, setQueryParams] = useState({});
 
+  useEffect(() => {
+    const checkLogin = async () => {
+      console.log(accessToken)
+      const {loggedIn, user} = await getProfile();
+      console.log(loggedIn);
+      console.log(user)
+      if (loggedIn === false) {
+        setButtonText("ورود");
+        setHref("/auth/signin");
+      }
+    };
+    checkLogin();
+  }, []);
 
-  
   const getProfile = async () => {
-    const res = await fetch("http://localhost:3001/auth/check-login", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `bearer ${accessToken}`
-      },
-    });
-    console.log(res)
-  }
+    try {
+        const res = await fetch("http://localhost:3001/auth/check-login", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `bearer ${accessToken}`
+            },
+        });
+
+        if (!res.ok) {
+            throw new Error("Failed to fetch profile");
+        }
+
+        const data = await res.json();
+        // Ensure the response has the expected structure
+        return {
+            loggedIn: data.loggedIn || false, // Default to false if not present
+            user: data.user || null // Default to null if not present
+        };
+    } catch (error) {
+        console.error("Error fetching profile:", error);
+        return { loggedIn: false, user: null }; // Return default values on error
+    }
+}
 
   const getBooks = async () => {
     setIsLoading(true);
@@ -98,8 +127,8 @@ const HomePage = () => {
             <span className=" font-vazir-normal text-[28px] leading-[50px] text-[#000000] "> همه کتاب ها </span>
           </div>
           <div className="flex flex-row justify-between gap-x-[10px] ml-[30px]">
-            <Link href={"/dashboard"} className="bg-[#F21055] flex items-center justify-center w-[154px] h-[62px] rounded-[10px] no-underline text-center  cursor-pointer font-vazir-bold text-[20px] leading-[37.5px] text-[#FFFFFF] hover:bg-[#ec849c]" >
-              داشبورد
+            <Link href={`${href}`} className="bg-[#F21055] flex items-center justify-center w-[154px] h-[62px] rounded-[10px] no-underline text-center  cursor-pointer font-vazir-bold text-[20px] leading-[37.5px] text-[#FFFFFF] hover:bg-[#ec849c]" >
+              {buttonText}
             </Link>
             <button className="bg-[#F21055] w-[154px] h-[62px] rounded-[10px] border-none outline-none cursor-pointer font-vazir-bold text-[20px] leading-[37.5px] text-[#FFFFFF] hover:bg-[#ec849c]" onClick={() => setModal(true)}>
               مرتب سازی
@@ -119,7 +148,6 @@ const HomePage = () => {
           }
         </div>)}
         <div>
-
         </div>
       </div>
     </div>

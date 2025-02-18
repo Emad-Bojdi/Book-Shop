@@ -1,18 +1,25 @@
 const setCookie = (tokens) => {
-    document.cookie = `accessToken=${tokens?.accessToken}; max-age=${1 * 24 * 60 * 60}`;
-    // document.cookie = `refreshToken=${tokens?.refreshToken}; max-age=${30 * 24 * 60 * 60}`;
+    if (typeof document !== "undefined") {
+        document.cookie = `accessToken=${tokens?.accessToken}; max-age=${1 * 24 * 60 * 60}`;
+        // document.cookie = `refreshToken=${tokens?.refreshToken}; max-age=${30 * 24 * 60 * 60}`;
+    }
 }
 
 const getCookie = (cookieName) => {
-    return document.cookie.split(";").find((token) => token.trim().split("=")[0] === cookieName)?.split("=")[1];
+    if (typeof document !== "undefined") {
+        return document.cookie.split(";").find((token) => token.trim().split("=")[0] === cookieName)?.split("=")[1];
+    }
+    return null;
 }
 
 const deleteCookies = () => {
-    document.cookie = "accessToken=null; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    if (typeof document !== "undefined") {
+        document.cookie = "accessToken=null; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    }
     return "success"
 }
 
-export { setCookie, getCookie , deleteCookies };
+export { setCookie, getCookie, deleteCookies };
 
 /**
  * Cookie Management Utility Module
