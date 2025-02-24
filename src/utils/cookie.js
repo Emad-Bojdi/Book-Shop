@@ -1,6 +1,6 @@
 const setCookie = (tokens) => {
     if (typeof document !== "undefined") {
-        document.cookie = `accessToken=${tokens?.accessToken}; max-age=${1 * 24 * 60 * 60}`;
+        document.cookie = `accessToken=${tokens?.accessToken}; max-age=${1 * 24 * 60 * 60}; path=/; secure`;
         // document.cookie = `refreshToken=${tokens?.refreshToken}; max-age=${30 * 24 * 60 * 60}`;
     }
 }

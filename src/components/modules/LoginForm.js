@@ -3,7 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import toast, {Toaster} from 'react-hot-toast';
-import { setCookie } from '@/utils/cookie';
+import { setCookie, getCookie } from '@/utils/cookie';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -54,22 +54,21 @@ const LoginForm = () => {
                 },
                 body: JSON.stringify({username: formData.userName, password: formData.password}),
             });
-            console.log(response);
 
             const data =await response.json();
-            console.log(data);
-            console.log(data.token)
             if(response.ok === true){
-                toast.success("وارد شدید!");
+                console.log("Received token:", data.token);
                 setCookie({accessToken: data.token});
-                console.log(data.token)
+                const storedToken = getCookie("accessToken");
+                console.log("Stored token:", storedToken);
+                toast.success("وارد شدید!");
                 router.push("/")
             }
             else if(response.ok === false){
                 toast.error("ابتدا حساب کاربری ایجاد کنید!");
             }
         } catch (err) {
-            console.log(err);
+            console.error("Login error:", err);
             toast.error("ارسال اطلاعات با خطا مواجه شد. لطفا دوباره تلاش کنید")
         } finally{
             setIsSubmitting(false);

@@ -7,53 +7,86 @@ import TableList from './TableList'
 import { getCookie } from "@/utils/cookie";
 import { useRouter } from 'next/navigation'
 
+
 const DashboardPage = () => {
   const accessToken = getCookie("accessToken")
   const [userName, setUserName] = useState("");
+  const [books, setBooks] = useState([])
   const router = useRouter()
+
 
   useEffect(() => {
     const checkLogin = async () => {
-      if(loggedIn === false) {
+
+      const { user, loggedIn } = await getProfile();
+      if (loggedIn === false) {
         router.push("/auth/signin")
       }
-      const { user } = await getProfile();
+      console.log(user)
       setUserName(user.username);
     };
     checkLogin();
+    getBooks();
   }, []);
+
 
 
   const getProfile = async () => {
     try {
-        const res = await fetch("http://localhost:3001/auth/check-login", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `bearer ${accessToken}`
-            },
-        });
+      // Log the token to verify it exists
+      console.log("Access Token:", accessToken);
 
-        if (!res.ok) {
-            throw new Error("Failed to fetch profile");
+      const res = await fetch("http://localhost:3001/auth/check-login", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}` // Note: 'Bearer' with capital B and space
+        },
+      });
+
+      if (!res.ok) {
+        if (res.status === 401) {
+          console.log("Unauthorized - Token might be invalid or expired");
+          return { loggedIn: false, user: null };
         }
+        throw new Error(`HTTP error! Status: ${res.status}`);
+      }
 
-        const data = await res.json();
-        // Ensure the response has the expected structure
-        return {
-            loggedIn: data.loggedIn || false, // Default to false if not present
-            user: data.user || null // Default to null if not present
-        };
+      const data = await res.json();
+      return {
+        loggedIn: data.loggedIn || false,
+        user: data.user || null
+      };
     } catch (error) {
-        console.error("Error fetching profile:", error);
-        return { loggedIn: false, user: null }; // Return default values on error
+      console.error("Error fetching profile:", error);
+      return { loggedIn: false, user: null };
     }
-}
+  }
 
+  const getBooks = async () => {
+    try {
+      const res = await fetch("http://localhost:3001/my-books", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`,
+        }
+      });
+      console.log(res)
+      const data = await res.json();
+      console.log(data.data.books);
+      if(res.ok === true) {
+        setBooks(data.data.books);
+        
+      }
+    } catch (error) {
+      
+    }
+  }
 
   return (
     <div className='bg-[#F7F8F8] w-full h-screen'>
-      <SearchBar username={userName}/>
+      <SearchBar username={userName} />
       <div className='flex justify-center pt-[30px]'>
         <div className='w-4/5 flex justify-between items-center'>
           <div className='flex items-center flex-row space-x-[5px]'>
@@ -67,7 +100,7 @@ const DashboardPage = () => {
           </div>
         </div>
       </div>
-      <TableList/>
+      <TableList books={books}/>
     </div>
   )
 }

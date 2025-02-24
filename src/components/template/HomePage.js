@@ -18,6 +18,37 @@ const HomePage = () => {
   const [modal, setModal] = useState(false);
   const [queryParams, setQueryParams] = useState({});
 
+  const getProfile = async () => {
+    try {
+        // Log the token to verify it exists
+        console.log("Access Token:", accessToken);
+
+        const res = await fetch("http://localhost:3001/auth/check-login", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${accessToken}` // Note: 'Bearer' with capital B and space
+            },
+        });
+
+        if (!res.ok) {
+            if (res.status === 401) {
+                console.log("Unauthorized - Token might be invalid or expired");
+                return { loggedIn: false, user: null };
+            }
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+
+        const data = await res.json();
+        return {
+            loggedIn: data.loggedIn || false,
+            user: data.user || null
+        };
+    } catch (error) {
+        console.error("Error fetching profile:", error);
+        return { loggedIn: false, user: null };
+    }
+}
   useEffect(() => {
     const checkLogin = async () => {
       console.log(accessToken)
@@ -32,31 +63,6 @@ const HomePage = () => {
     checkLogin();
   }, []);
 
-  const getProfile = async () => {
-    try {
-        const res = await fetch("http://localhost:3001/auth/check-login", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `bearer ${accessToken}`
-            },
-        });
-
-        if (!res.ok) {
-            throw new Error("Failed to fetch profile");
-        }
-
-        const data = await res.json();
-        // Ensure the response has the expected structure
-        return {
-            loggedIn: data.loggedIn || false, // Default to false if not present
-            user: data.user || null // Default to null if not present
-        };
-    } catch (error) {
-        console.error("Error fetching profile:", error);
-        return { loggedIn: false, user: null }; // Return default values on error
-    }
-}
 
   const getBooks = async () => {
     setIsLoading(true);
