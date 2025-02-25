@@ -10,10 +10,14 @@ import { getCookie } from "@/utils/cookie";
 
 const HomePage = () => {
   const accessToken = getCookie("accessToken")
+  let text = "مرتب سازی"
 
   const [buttonText, setButtonText] = useState("داشبورد");
   const [href, setHref] = useState("/dashboard");
+  
+
   const [books, setBooks] = useState([]);
+
   const [isLoading, setIsLoading] = useState(false);
   const [modal, setModal] = useState(false);
   const [queryParams, setQueryParams] = useState({});
@@ -141,7 +145,7 @@ const HomePage = () => {
             </button>
           </div>
           {
-            modal && (<Modal setModal={setModal} onSort={handleSort} />)
+            modal && (<Modal setModal={setModal} onSort={handleSort} text={text}/>)
           }
         </div>
         {isLoading ? (<div className=" flex justify-center">

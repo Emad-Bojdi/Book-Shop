@@ -6,12 +6,16 @@ import Image from 'next/image'
 import TableList from './TableList'
 import { getCookie } from "@/utils/cookie";
 import { useRouter } from 'next/navigation'
-
+import toast from 'react-hot-toast'
+import Modal from '../modules/Modal'
 
 const DashboardPage = () => {
   const accessToken = getCookie("accessToken")
+  let text = "افزودن کتاب "
+  const [modal, setModal] = useState(false);
   const [userName, setUserName] = useState("");
-  const [books, setBooks] = useState([])
+
+  const [books, setBooks] = useState([]);
   const router = useRouter()
 
 
@@ -75,12 +79,30 @@ const DashboardPage = () => {
       console.log(res)
       const data = await res.json();
       console.log(data.data.books);
-      if(res.ok === true) {
+      if (res.ok === true) {
         setBooks(data.data.books);
-        
+
       }
     } catch (error) {
-      
+
+    }
+  }
+
+  const addHandler = async () => {
+    try {
+      const res = await fetch("http:localhost:3001/book", formData, {
+        method: "POST",
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "Authorization": `bearer ${accessToken}`
+        }
+      });
+      toast.success(" کتاب با موفقیت افزوده شد ");
+      return true;
+    } catch (error) {
+      console.log(error);
+      toast.error("مشکلی پیش امده است ");
+      return false;
     }
   }
 
@@ -94,13 +116,17 @@ const DashboardPage = () => {
             <span className='font-vazir-normal text-[24px] leading-[37.5px] text-[#282828] '>مدیریت کتاب ها</span>
           </div>
           <div>
-            <button className='w-[132px] h-[45px] flex justify-center border-none  items-center rounded-[10px] bg-[#F21055] text-[#FFFFFF] font-vazir-normal leading-[25px]  '>
-              افزودن کتاب
+            <button className='w-[132px] h-[45px] flex justify-center border-none  items-center rounded-[10px] bg-[#F21055] text-[#FFFFFF] font-vazir-normal leading-[25px]  cursor-pointer' onClick={() => setModal(true)}>
+              {text}
             </button>
           </div>
+          
+          {
+            modal && (<Modal setModal={setModal} text={text}/>)
+          }
         </div>
       </div>
-      <TableList books={books}/>
+      <TableList books={books} />
     </div>
   )
 }
