@@ -5,16 +5,12 @@ import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import DeleteModal from "../modules/DeleteModal";
 
-const TableList = ({ books, onEditBook }) => {
-    const accessToken = getCookie("accessToken");
-
+const TableList = ({ books, onEditBook,onBookAdded }) => {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [bookToDelete, setBookToDelete] = useState(null);
-    const router = useRouter();
 
     // Log the books received by this component
     console.log("TableList received books:", books.map(book => book.id));
-
     const editHandler = (book) => {
         // Call the edit handler first
         onEditBook(book);
@@ -26,42 +22,7 @@ const TableList = ({ books, onEditBook }) => {
         setBookToDelete(book);
         setShowDeleteConfirm(true);
     }
-    const confirmDelete = async () => {
-        if (!bookToDelete) return;
 
-        try {
-            const res = await fetch(`http://localhost:3001/book/${bookToDelete.id}`, {
-                method: "DELETE",
-                headers: {
-                    Authorization: `bearer ${accessToken}`
-                }
-            });
-
-            if (res.ok) {
-                // Close the confirmation dialog
-                setShowDeleteConfirm(false);
-                setBookToDelete(null);
-
-                // Call the parent component's delete handler to refresh the book list
-                if (onDeleteBook) {
-                    onDeleteBook(bookToDelete.id);
-                } else {
-                    toast.success("کتاب مورد نظر با موفقیت حذف شد");
-                    router.refresh();
-                }
-            } else {
-                const errorData = await res.json();
-                toast.error(`خطا در حذف کتاب: ${errorData.message || 'خطای نامشخص'}`);
-            }
-        } catch (error) {
-            console.error("Error deleting book:", error);
-            toast.error("خطا در حذف کتاب");
-        }
-    }
-    const cancelDelete = () => {
-        setShowDeleteConfirm(false);
-        setBookToDelete(null);
-    }
 
     return (
         <>
@@ -112,7 +73,7 @@ const TableList = ({ books, onEditBook }) => {
                     </tbody>
                 </table>
             </div>
-            {showDeleteConfirm && (<DeleteModal setBookToDelete={setBookToDelete} bookToDelete={bookToDelete}  setShowDeleteConfirm={setShowDeleteConfirm}/>)}
+            {showDeleteConfirm && (<DeleteModal setBookToDelete={setBookToDelete} bookToDelete={bookToDelete}  setShowDeleteConfirm={setShowDeleteConfirm} onBookAdded={onBookAdded}/>)}
             {/* {showDeleteConfirm && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
                     <div className="bg-white rounded-lg p-6 max-w-sm w-full text-center">

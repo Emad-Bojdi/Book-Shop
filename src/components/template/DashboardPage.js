@@ -6,7 +6,7 @@ import Image from 'next/image'
 import TableList from './TableList'
 import { deleteCookies, getCookie } from "@/utils/cookie";
 import { useRouter } from 'next/navigation'
-import toast from 'react-hot-toast'
+import toast, { Toaster } from 'react-hot-toast'
 import Modal from '../modules/Modal'
 
 const DashboardPage = ({ editBookId }) => {
@@ -260,24 +260,7 @@ const DashboardPage = ({ editBookId }) => {
   }
 
   // Add a new function to handle book deletion
-  const handleDeleteBook = async (bookId) => {
-    try {
-      console.log("Deleting book with ID:", bookId);
-      
-      // Reset books state to trigger a refresh after deletion
-      setBooks([]);
-      setFilteredBooks([]);
-      
-      // Fetch the updated books list after deletion
-      await getBooks();
-      
-      // Show success message
-      toast.success("کتاب با موفقیت حذف شد");
-    } catch (error) {
-      console.error("Error refreshing books after deletion:", error);
-      toast.error("خطا در بروزرسانی لیست کتاب‌ها");
-    }
-  }
+
 
   return (
     <div className='bg-[#F7F8F8] w-full h-screen'>
@@ -313,7 +296,7 @@ const DashboardPage = ({ editBookId }) => {
       <TableList 
         books={currentBooks} 
         onEditBook={handleEditBook} 
-        onDeleteBook={handleDeleteBook} 
+        onBookAdded={handleBookAdded}
       />
       
       {/* Pagination */}
@@ -346,6 +329,13 @@ const DashboardPage = ({ editBookId }) => {
           </button>
         </div>
       </div>
+      <Toaster 
+                position="top-center"
+                toastOptions={{
+                    className: "font-vazir-medium",
+                    duration: 1000,
+                }}
+            />
     </div>
   )
 }

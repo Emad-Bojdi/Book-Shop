@@ -3,7 +3,7 @@ import Image from 'next/image';
 import React from 'react'
 import toast, { Toaster } from 'react-hot-toast';
 
-const DeleteModal = ({ showDeleteConfirm, setShowDeleteConfirm, setBookToDelete, bookToDelete }) => {
+const DeleteModal = ({ setShowDeleteConfirm, setBookToDelete, bookToDelete, onBookAdded }) => {
 
     const accessToken = getCookie("accessToken")
     const confirmDelete = async () => {
@@ -16,20 +16,16 @@ const DeleteModal = ({ showDeleteConfirm, setShowDeleteConfirm, setBookToDelete,
                     "Authorization": `Bearer ${accessToken}`
                 }
             });
-            
             console.log(res)
-            if (res.ok) {
+            if (res.ok === true) {
+                toast.success("کتاب مورد نظر با موفقیت حذف شد");
                 // Close the confirmation dialog
                 setShowDeleteConfirm(false);
                 setBookToDelete(null);
 
+                await onBookAdded();
                 // Call the parent component's delete handler to refresh the book list
-                if (onDeleteBook) {
-                    onDeleteBook(bookToDelete.id);
-                } else {
-                    toast.success("کتاب مورد نظر با موفقیت حذف شد");
-                    router.refresh();
-                }
+
             } else {
                 const errorData = await res.json();
                 toast.error(`خطا در حذف کتاب: ${errorData.message || 'خطای نامشخص'}`);
@@ -49,7 +45,7 @@ const DeleteModal = ({ showDeleteConfirm, setShowDeleteConfirm, setBookToDelete,
 
             <div className='fixed z-50 right-[0] bottom-[0] top-0 left-0 w-full h-full bg-[#333333]/40 backdrop-blur-[15px] flex justify-center items-center'>
                 <div className={`w-[472px] h-[338px] rounded-[30px] bg-[#fff] flex flex-col items-center p-4 overflow-y-auto`}>
-                    <Image src="icons/Close.svg" alt="Delete" width={97.83} height={96} className='mt-[25px] mb-[15px]'/>
+                    <Image src="icons/Close.svg" alt="Delete" width={97.83} height={96} className='mt-[25px] mb-[15px]' />
                     <h3 className="font-vazir-normal text-[20px] leading-[31.25px]  ">آیا از حذف این کتاب اطمینان دارید؟</h3>
                     <p className="font-vazir-normal text-[20px] mt-[-10px] text-gray-600">{bookToDelete?.title}</p>
                     <div className="flex justify-center space-x-[10px] mt-[30px]">
@@ -69,7 +65,7 @@ const DeleteModal = ({ showDeleteConfirm, setShowDeleteConfirm, setBookToDelete,
                 </div>
             </div>
 
-            <Toaster/>
+           
         </>
     )
 }
