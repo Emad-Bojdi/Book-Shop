@@ -2,11 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 
 const BookCard = ({book}) => {
-  const {title, author, price} = book;
+  console.log(book)
+  const {title, author, price, image,id} = book;
   return (
     <div className="bg-[#FFFFFF] w-[231px] h-[240px] rounded-[12px] shadow-[0_0_1px_1px_rgba(0,0,0,0.1)] ml-[10px]">
       <div className="flex flex-col justify-center p-[8px]">
-      <Link  className="font-vazir-normal text-[25px] leading-[31.25px] text-[#282828] no-underline" href={"/"}>
+        <Image src={image} alt="alt" width={70} height={70} unoptimized className="mb-[15px]"/>
+      <Link  className="font-vazir-normal text-[25px] leading-[31.25px] text-[#282828] no-underline" href={`/books/${id}`}>
         {title}
         </Link>
         <p className="font-vazir-normal text-[18px] text-[#282828] ">{author}</p>

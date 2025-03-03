@@ -1,10 +1,12 @@
+import DetailsPage from '@/components/template/DetailsPage'
 import React from 'react'
 
-const page = () => {
+const page = ({params}) => {
+  console.log(params)
   return (
-    <div>
-      
-    </div>
+    <>
+      <DetailsPage bookId={params.bookId}/>
+    </>
   )
 }
 

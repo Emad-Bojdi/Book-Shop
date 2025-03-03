@@ -1,11 +1,12 @@
-import React from 'react'
+import NotFound from "@/components/modules/404";
+import HomePage from "@/components/template/HomePage";
+import SignUp from "@/components/template/SignUp";
 
-const page = () => {
+
+export default function Home() {
   return (
-    <div>
-      
-    </div>
-  )
+    <>
+    <HomePage/>
+    </>
+  );
 }
-
-export default page

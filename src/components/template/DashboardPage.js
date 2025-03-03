@@ -19,11 +19,11 @@ const DashboardPage = ({ editBookId }) => {
 
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
-  
+
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const booksPerPage = 4;
-  
+
   const [searchQuery, setSearchQuery] = useState({
     text: '',
     field: 'title' // default search field
@@ -33,10 +33,10 @@ const DashboardPage = ({ editBookId }) => {
   // Get current books for pagination
   const indexOfLastBook = currentPage * booksPerPage;
   const indexOfFirstBook = indexOfLastBook - booksPerPage;
-  
+
   // Make sure we're getting a clean slice of the array without duplicates
   const currentBooks = [...filteredBooks].slice(indexOfFirstBook, indexOfLastBook);
-  
+
   // For debugging
   console.log("Pagination debug:");
   console.log("Total books:", filteredBooks.length);
@@ -44,11 +44,11 @@ const DashboardPage = ({ editBookId }) => {
   console.log("Books per page:", booksPerPage);
   console.log("Index of first book:", indexOfFirstBook);
   console.log("Index of last book:", indexOfLastBook);
-  console.log("Current books:", currentBooks.map(book => book.id));
-  
+  // console.log("Current books:", currentBooks.map(book => book.id));
+
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
-  
+
   // Calculate total pages
   const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
 
@@ -94,10 +94,10 @@ const DashboardPage = ({ editBookId }) => {
 
   const handleSearch = (searchText, searchField) => {
     setSearchQuery({ text: searchText, field: searchField });
-    
+
     // Reset to first page when searching
     setCurrentPage(1);
-    
+
     if (!searchText) {
       setFilteredBooks(books);
       return;
@@ -116,13 +116,13 @@ const DashboardPage = ({ editBookId }) => {
     // Clear the current books list to ensure we see the changes
     setBooks([]);
     setFilteredBooks([]);
-    
+
     // Reset to first page when books are updated
     setCurrentPage(1);
-    
+
     // Add a small delay to ensure the server has processed the update
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     // Fetch the updated books list
     try {
       await getBooks();
@@ -199,25 +199,27 @@ const DashboardPage = ({ editBookId }) => {
           "Authorization": `Bearer ${accessToken}`,
         }
       });
-      
+
       console.log("Books API response status:", res.status);
-      
+      const data = await res.json();
+      if(res.status === 404) {
+        toast.error("کتابی در کتابخانه شما وجود ندارد!")
+        return;
+      }
       if (!res.ok) {
-        const errorText = await res.text();
-        console.error("Error fetching books. Status:", res.status, "Response:", errorText);
         toast.error("خطا در دریافت اطلاعات کتاب‌ها");
         return;
       }
       
-      const data = await res.json();
+
       console.log("Books data received:", data);
-      
+
       if (data && data.data && data.data.books) {
         // Transform the books data to include the full image URL if it exists
         const booksWithImages = data.data.books.map(book => {
           // Normalize image path by replacing backslashes with forward slashes
           let imagePath = book.image ? book.image.replace(/\\/g, '/') : null;
-          
+
           // Make sure the path is properly formatted
           if (imagePath && !imagePath.startsWith('http')) {
             // If the path already includes 'uploads', don't add it again
@@ -227,13 +229,13 @@ const DashboardPage = ({ editBookId }) => {
               imagePath = `http://localhost:3001/${imagePath}`;
             }
           }
-          
+
           return {
             ...book,
             image: imagePath
           };
         });
-        
+
         console.log("Books with processed images:", booksWithImages);
         setBooks(booksWithImages);
         setFilteredBooks(booksWithImages);
@@ -264,7 +266,7 @@ const DashboardPage = ({ editBookId }) => {
 
   return (
     <div className='bg-[#F7F8F8] w-full h-screen'>
-      <SearchBar username={userName} role={role} onSearch={handleSearch}/>
+      <SearchBar username={userName} role={role} onSearch={handleSearch} />
       <div className='flex justify-center pt-[30px]'>
         <div className='w-4/5 flex justify-between items-center'>
           <div className='flex items-center flex-row space-x-[5px]'>
@@ -284,32 +286,32 @@ const DashboardPage = ({ editBookId }) => {
           </div>
 
           {modal && (
-            <Modal 
-              setModal={setModal} 
-              text={selectedBook ? "ویرایش کتاب" : text} 
-              onBookAdded={handleBookAdded} 
-              bookToEdit={selectedBook} 
+            <Modal
+              setModal={setModal}
+              text={selectedBook ? "ویرایش کتاب" : text}
+              onBookAdded={handleBookAdded}
+              bookToEdit={selectedBook}
             />
           )}
         </div>
       </div>
-      <TableList 
-        books={currentBooks} 
-        onEditBook={handleEditBook} 
+      <TableList
+        books={currentBooks}
+        onEditBook={handleEditBook}
         onBookAdded={handleBookAdded}
       />
-      
+
       {/* Pagination */}
       <div className="w-full flex justify-center mt-[20px]">
         <div className="flex space-x-[10px] ">
-          <button 
+          <button
             onClick={() => paginate(currentPage > 1 ? currentPage - 1 : 1)}
             disabled={currentPage === 1}
             className={`px-[10px] py-[5px] font-vazir-normal text-[14px]  outline-none py-2 border-0 rounded-[15px] ${currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#F21055] text-[#fff] cursor-pointer'}`}
           >
             قبلی
           </button>
-          
+
           {Array.from({ length: totalPages }, (_, i) => (
             <button
               key={i + 1}
@@ -319,8 +321,8 @@ const DashboardPage = ({ editBookId }) => {
               {i + 1}
             </button>
           ))}
-          
-          <button 
+
+          <button
             onClick={() => paginate(currentPage < totalPages ? currentPage + 1 : totalPages)}
             disabled={currentPage === totalPages}
             className={`px-[10px] py-[5px]  font-vazir-normal border-none outline-none rounded-[15px] ${currentPage === totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#F21055] text-[#fff] cursor-pointer'}`}
@@ -329,13 +331,14 @@ const DashboardPage = ({ editBookId }) => {
           </button>
         </div>
       </div>
-      <Toaster 
-                position="top-center"
-                toastOptions={{
-                    className: "font-vazir-medium",
-                    duration: 1000,
-                }}
-            />
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          className: "font-vazir-medium",
+
+          duration: 1000,
+        }}
+      />
     </div>
   )
 }

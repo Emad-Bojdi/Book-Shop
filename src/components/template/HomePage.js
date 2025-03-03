@@ -3,7 +3,7 @@
 import Image from "next/image"
 import BookCard from "../modules/BookCard"
 import { useState, useEffect } from "react";
-import "./Loader.css"
+import "../../css/Loader.css"
 import Modal from "../modules/Modal";
 import Link from "next/link";
 import { getCookie } from "@/utils/cookie";
@@ -72,11 +72,6 @@ const HomePage = () => {
     setIsLoading(true);
     try {
       const queryString = new URLSearchParams(queryParams).toString();
-
-      // Update the URL with query parameters without page reload
-      const newUrl = `${window.location.pathname}${queryString ? `?${queryString}` : ''}`;
-      window.history.pushState({ path: newUrl }, '', newUrl);
-
       const res = await fetch(`http://localhost:3001/book?${queryString}`, {
         method: "GET",
         headers: {
@@ -88,8 +83,19 @@ const HomePage = () => {
         throw new Error(`HTTP error! Status: ${res.status}`);
       }
       const data = await res.json();
+      
+      // Process the images before setting the books
+      const processedBooks = data.data.map(book => ({
+        ...book,
+        image: book.image ? (
+          book.image.startsWith('http') 
+            ? book.image 
+            : `http://localhost:3001/${book.image.replace(/^\//, '')}`
+        ) : null
+      }));
+
       // Filter books based on query parameters
-      const filteredBooks = filterBooks(data.data, queryParams);
+      const filteredBooks = filterBooks(processedBooks, queryParams);
       setBooks(filteredBooks);
     } catch (error) {
       console.error("Failed to fetch books:", error);
