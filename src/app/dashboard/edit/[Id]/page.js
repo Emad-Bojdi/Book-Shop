@@ -4,7 +4,7 @@ import DashboardPage from "@/components/template/DashboardPage"
 const page = ({params}) => {
   return (
     <>
-      <DashboardPage id={params.id}/>
+      <DashboardPage editBookId={params.id}/>
     </>
   )
 }

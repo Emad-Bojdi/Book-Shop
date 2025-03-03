@@ -248,7 +248,7 @@ const Modal = ({ onSort, setModal, text, onBookAdded, bookToEdit }) => {
                                             />
                                         ) : (
                                             // For locally selected images
-                                            <img
+                                            <Image
                                                 src={previewImage}
                                                 alt="Preview"
                                                 width={200}

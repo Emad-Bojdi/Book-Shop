@@ -11,20 +11,46 @@ import Modal from '../modules/Modal'
 
 const DashboardPage = ({ editBookId }) => {
   const accessToken = getCookie("accessToken")
-  let text = "افزودن کتاب "
+  const text = "افزودن کتاب"
   const [modal, setModal] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
   const [userName, setUserName] = useState("");
   const [role, setRole] = useState("");
 
   const [books, setBooks] = useState([]);
-  const [filteredBooks, setFilteredBooks] = useState([])
+  const [filteredBooks, setFilteredBooks] = useState([]);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const booksPerPage = 4;
+  
   const [searchQuery, setSearchQuery] = useState({
     text: '',
     field: 'title' // default search field
   })
   const router = useRouter()
 
+  // Get current books for pagination
+  const indexOfLastBook = currentPage * booksPerPage;
+  const indexOfFirstBook = indexOfLastBook - booksPerPage;
+  
+  // Make sure we're getting a clean slice of the array without duplicates
+  const currentBooks = [...filteredBooks].slice(indexOfFirstBook, indexOfLastBook);
+  
+  // For debugging
+  console.log("Pagination debug:");
+  console.log("Total books:", filteredBooks.length);
+  console.log("Current page:", currentPage);
+  console.log("Books per page:", booksPerPage);
+  console.log("Index of first book:", indexOfFirstBook);
+  console.log("Index of last book:", indexOfLastBook);
+  console.log("Current books:", currentBooks.map(book => book.id));
+  
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  
+  // Calculate total pages
+  const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
 
   useEffect(() => {
     const checkLogin = async () => {
@@ -41,20 +67,48 @@ const DashboardPage = ({ editBookId }) => {
   }, []);
 
   useEffect(() => {
-    if (editBookId && books.length > 0) {
+    if (editBookId) {
+      console.log("Edit book ID detected:", editBookId);
+      // Find the book with the matching ID
       const bookToEdit = books.find(book => book.id === editBookId);
       if (bookToEdit) {
-        setSelectedBook(bookToEdit);
-        setModal(true);
+        console.log("Found book to edit:", bookToEdit);
+        handleEditBook(bookToEdit);
+      } else {
+        console.log("Book with ID not found in current books list");
+        // If the book isn't in the current list, we might need to fetch it
+        // This could happen if we're on a different page of pagination
+        getBooks().then(() => {
+          // Try to find the book again after fetching
+          const bookToEdit = books.find(book => book.id === editBookId);
+          if (bookToEdit) {
+            console.log("Found book to edit after fetching:", bookToEdit);
+            handleEditBook(bookToEdit);
+          } else {
+            console.log("Book with ID still not found after fetching");
+          }
+        });
       }
     }
-  }, [editBookId, books]);
+  }, [editBookId, books.length]);
 
   const handleSearch = (searchText, searchField) => {
-    setSearchQuery({
-      text: searchText,
-      field: searchField
-    })
+    setSearchQuery({ text: searchText, field: searchField });
+    
+    // Reset to first page when searching
+    setCurrentPage(1);
+    
+    if (!searchText) {
+      setFilteredBooks(books);
+      return;
+    }
+
+    const filtered = books.filter(book => {
+      const fieldValue = book[searchField]?.toString().toLowerCase() || '';
+      return fieldValue.includes(searchText.toLowerCase());
+    });
+
+    setFilteredBooks(filtered);
   }
 
   const handleBookAdded = async () => {
@@ -63,11 +117,20 @@ const DashboardPage = ({ editBookId }) => {
     setBooks([]);
     setFilteredBooks([]);
     
+    // Reset to first page when books are updated
+    setCurrentPage(1);
+    
     // Add a small delay to ensure the server has processed the update
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
     // Fetch the updated books list
-    await getBooks();
+    try {
+      await getBooks();
+      console.log("Books list refreshed successfully");
+    } catch (error) {
+      console.error("Error refreshing books list:", error);
+      toast.error("خطا در بروزرسانی لیست کتاب‌ها");
+    }
   }
 
   useEffect(() => {
@@ -191,8 +254,29 @@ const DashboardPage = ({ editBookId }) => {
   }
 
   const handleEditBook = (book) => {
+    console.log("Setting selected book for editing:", book);
     setSelectedBook(book);
     setModal(true);
+  }
+
+  // Add a new function to handle book deletion
+  const handleDeleteBook = async (bookId) => {
+    try {
+      console.log("Deleting book with ID:", bookId);
+      
+      // Reset books state to trigger a refresh after deletion
+      setBooks([]);
+      setFilteredBooks([]);
+      
+      // Fetch the updated books list after deletion
+      await getBooks();
+      
+      // Show success message
+      toast.success("کتاب با موفقیت حذف شد");
+    } catch (error) {
+      console.error("Error refreshing books after deletion:", error);
+      toast.error("خطا در بروزرسانی لیست کتاب‌ها");
+    }
   }
 
   return (
@@ -226,7 +310,42 @@ const DashboardPage = ({ editBookId }) => {
           )}
         </div>
       </div>
-      <TableList books={filteredBooks} onEditBook={handleEditBook} />
+      <TableList 
+        books={currentBooks} 
+        onEditBook={handleEditBook} 
+        onDeleteBook={handleDeleteBook} 
+      />
+      
+      {/* Pagination */}
+      <div className="w-full flex justify-center mt-[20px]">
+        <div className="flex space-x-[10px] ">
+          <button 
+            onClick={() => paginate(currentPage > 1 ? currentPage - 1 : 1)}
+            disabled={currentPage === 1}
+            className={`px-[10px] py-[5px] font-vazir-normal text-[14px]  outline-none py-2 border-0 rounded-[15px] ${currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#F21055] text-[#fff] cursor-pointer'}`}
+          >
+            قبلی
+          </button>
+          
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              onClick={() => paginate(i + 1)}
+              className={`px-[8px] py-[3px] font-vazir-normal border-none outline-none rounded-[15px] ${currentPage === i + 1 ? 'bg-[#F21055] text-[#fff]' : 'bg-gray-200'}`}
+            >
+              {i + 1}
+            </button>
+          ))}
+          
+          <button 
+            onClick={() => paginate(currentPage < totalPages ? currentPage + 1 : totalPages)}
+            disabled={currentPage === totalPages}
+            className={`px-[10px] py-[5px]  font-vazir-normal border-none outline-none rounded-[15px] ${currentPage === totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#F21055] text-[#fff] cursor-pointer'}`}
+          >
+            بعدی
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
