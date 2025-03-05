@@ -7,6 +7,9 @@ import "../../css/Loader.css"
 import Modal from "../modules/Modal";
 import Link from "next/link";
 import { getCookie } from "@/utils/cookie";
+import { Toaster } from "react-hot-toast";
+import { toast } from "react-hot-toast";
+
 
 const HomePage = () => {
   const accessToken = getCookie("accessToken")
@@ -99,6 +102,7 @@ const HomePage = () => {
       setBooks(filteredBooks);
     } catch (error) {
       console.error("Failed to fetch books:", error);
+      toast.error("خطا در دریافت اطلاعات کتاب‌ها");
     } finally {
       setIsLoading(false);
     }
@@ -166,6 +170,13 @@ const HomePage = () => {
         <div>
         </div>
       </div>
+      <Toaster
+      position="top-center"
+      toastOptions={{
+        className: "font-vazir-medium",
+
+        duration: 1000,
+      }}/>
     </div>
   )
 }

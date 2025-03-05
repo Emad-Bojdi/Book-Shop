@@ -1,5 +1,6 @@
 import localFont from "next/font/local";
 import "./globals.css";
+import { CartProvider } from "@/context/CartContext";
 
 const vazir = localFont({
   src: [{
@@ -43,7 +44,9 @@ export default function RootLayout({ children }) {
       <body
         className={`${vazir.variable} antialiased`}
       >
-        {children}
+        <CartProvider>
+          {children}
+        </CartProvider>
       </body>
     </html>
   );
