@@ -9,7 +9,8 @@ const BookCard = ({ book }) => {
   // Add null check for book
   
 
-  const { title, author, price, image, id, quantity = 10, userId } = book; // Provide default value for quantity
+  const { title, author, price, image, id, quantity = 10, userId } = book; 
+  console.log(userId)// Provide default value for quantity
   const [counter, setCounter] = useState(1);
   const [showCounter, setShowCounter] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
@@ -37,10 +38,11 @@ const BookCard = ({ book }) => {
         }
 
         const data = await res.json();
-        setUserProfile(data.user || null);
-
+        console.log(data)
+        setUserProfile(data.user.id);
+        console.log(userProfile);
         // Check if this is the user's own book
-        if (userProfile !== userId) {
+        if (userProfile === userId) {
           setIsOwnBook(true);
         }
       } catch (error) {
@@ -49,7 +51,7 @@ const BookCard = ({ book }) => {
     };
 
     fetchUserProfile();
-  }, [accessToken, userId]);
+  }, [accessToken, userProfile]);
 
   // Handle increment counter
   const incrementCounter = (e) => {
@@ -67,6 +69,10 @@ const BookCard = ({ book }) => {
     e.stopPropagation(); // Prevent event bubbling
     if (counter > 1) {
       setCounter(prev => prev - 1);
+    }
+    if(counter === 1) {
+      setShowCounter(false);
+      return
     }
   };
 
@@ -102,8 +108,8 @@ const BookCard = ({ book }) => {
   return (
     <div className="bg-[#FFFFFF] w-[231px] h-[240px] rounded-[12px] shadow-[0_0_1px_1px_rgba(0,0,0,0.1)] ml-[10px] relative">
       {isOwnBook && (
-        <div className="absolute top-0 right-0 bg-yellow-400 text-xs text-yellow-800 px-2 py-1 rounded-tr-[12px] rounded-bl-md z-10">
-          کتاب شما
+        <div className="absolute bottom-[0] right-[85px]  text-xs  px-2 py-1 z-10 ">
+          <span className="w-full font-vazir-medium text-[15px] text-[#4d4d4d]"> کتاب شما </span>
         </div>
       )}
       <div className="flex flex-col justify-center p-[8px]">
@@ -132,7 +138,6 @@ const BookCard = ({ book }) => {
             <div className="flex items-center space-x-[10px] rounded-lg p-1">
               <button
                 onClick={decrementCounter}
-                disabled={counter <= 1}
                 className={`w-[25px] h-[25px] flex items-center border-none outline-none justify-center rounded-[10px] ${counter <= 1 ? 'bg-gray-200 text-gray-400' : 'bg-[#F21055] text-[#FCFCFC] hover:bg-[#d80d48]'} transition-colors`}
               >
                 <span className="text-[15px]">-</span>

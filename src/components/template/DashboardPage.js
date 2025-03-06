@@ -90,7 +90,7 @@ const DashboardPage = ({ editBookId }) => {
         });
       }
     }
-  }, [editBookId, books.length]);
+  }, [editBookId, books?.length]);
 
   const handleSearch = (searchText, searchField) => {
     setSearchQuery({ text: searchText, field: searchField });
@@ -188,6 +188,22 @@ const DashboardPage = ({ editBookId }) => {
       return { loggedIn: false, user: null };
     }
   }
+  // if(role === "admin") {
+  //   const getAdminProfile = async () => {
+  //     const res = await fetch("http://localhost:3001/admin/books",{
+  //       method: "GET",
+  //       headers:{
+  //         "Content-Type": "application/json",
+  //         "Authorization" : `Bearer ${accessToken}`
+  //       }
+        
+  //     });
+  //     const data = await res.json();
+  //     console.log(data);
+  //     setBooks(data.books)
+  //   }
+  //   getAdminProfile();
+  // }
 
   const getBooks = async () => {
     try {
@@ -202,14 +218,14 @@ const DashboardPage = ({ editBookId }) => {
 
       console.log("Books API response status:", res.status);
       const data = await res.json();
-      if(res.status === 404) {
-        toast.error("کتابی در کتابخانه شما وجود ندارد!")
-        return;
-      }
-      if (!res.ok) {
-        toast.error("خطا در دریافت اطلاعات کتاب‌ها");
-        return;
-      }
+      // if(res.status === 404) {
+      //   toast.error("کتابی در کتابخانه شما وجود ندارد!")
+      //   return;
+      // }
+      // if (!res.ok) {
+      //   toast.error("خطا در دریافت اطلاعات کتاب‌ها");
+      //   return;
+      // }
       
 
       console.log("Books data received:", data);
@@ -239,10 +255,11 @@ const DashboardPage = ({ editBookId }) => {
         console.log("Books with processed images:", booksWithImages);
         setBooks(booksWithImages);
         setFilteredBooks(booksWithImages);
-      } else {
-        console.error("Invalid books data format:", data);
-        toast.error("فرمت داده‌های دریافتی نامعتبر است");
       }
+      //  else {
+      //   console.error("Invalid books data format:", data);
+      //   toast.error("فرمت داده‌های دریافتی نامعتبر است");
+      // }
     } catch (error) {
       console.error("Error fetching books:", error);
       toast.error("خطا در دریافت اطلاعات: " + error.message);

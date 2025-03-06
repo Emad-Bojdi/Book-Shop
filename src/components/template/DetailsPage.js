@@ -38,7 +38,7 @@ const DetailsPage = ({ bookId }) => {
                 }
 
                 const data = await res.json();
-                setUserProfile(data.user || null);
+                setUserProfile(data.user.id );
             } catch (error) {
                 console.error("Error fetching user profile:", error);
             }
@@ -84,7 +84,7 @@ const DetailsPage = ({ bookId }) => {
                 setBook(processedBook);
                 
                 // Check if this is the user's own book
-                if (userProfile !== processedBook.userId) {
+                if (userProfile === data.userId) {
                     setIsOwnBook(true);
                     console.log(isOwnBook)
                 }
@@ -266,8 +266,8 @@ const DetailsPage = ({ bookId }) => {
                                 
                                 {/* Own Book Warning */}
                                 {isOwnBook && (
-                                    <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-2 rounded-md">
-                                        <p className="font-vazir-normal text-center">این کتاب متعلق به شماست و امکان خرید آن وجود ندارد</p>
+                                    <div className=" px-4 py-2 rounded-md">
+                                        <p className="font-vazir-normal text-center text-[#4d4d4d]">این کتاب متعلق به شماست و امکان خرید آن وجود ندارد</p>
                                     </div>
                                 )}
                             </div>

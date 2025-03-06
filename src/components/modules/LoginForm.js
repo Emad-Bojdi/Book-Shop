@@ -62,7 +62,7 @@ const LoginForm = () => {
                 const storedToken = getCookie("accessToken");
                 console.log("Stored token:", storedToken);
                 toast.success("وارد شدید!");
-                router.push("/")
+                router.push("/books")
             }
             else if(response.ok === false){
                 toast.error("ابتدا حساب کاربری ایجاد کنید!");
